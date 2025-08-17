@@ -47,28 +47,28 @@ const coFounders = [
 
 const CoFounderTeam = () => {
   return (
-    <section id="features" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 relative particle-bg">
+    <section id="features" className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 relative particle-bg">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <Badge variant="outline" className="mb-4 px-4 py-2 text-sm border-primary/30">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+          <Badge variant="outline" className="mb-3 sm:mb-4 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm border-primary/30">
             Your AI Dream Team
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-shimmer">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6 text-shimmer">
             Meet Your AI Co-Founder Team
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
             Four specialized AI experts working together to turn your startup vision into reality. 
             Each brings unique expertise to accelerate your journey.
           </p>
         </div>
 
         {/* Co-founder cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {coFounders.map((coFounder, index) => (
             <Card 
               key={coFounder.id} 
-              className={`card-gradient border-border/50 p-4 sm:p-6 hover-lift animate-bounce-in group cursor-pointer relative overflow-hidden transition-all duration-500 hover:min-h-[400px]`}
+              className={`card-gradient border-border/50 p-4 sm:p-6 hover-lift animate-bounce-in group cursor-pointer relative overflow-hidden transition-all duration-500 hover:min-h-[480px] min-h-[280px]`}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Icon */}
@@ -88,13 +88,13 @@ const CoFounderTeam = () => {
                 {coFounder.description}
               </p>
 
-              {/* Features - Now visible on hover and expand the card */}
-              <div className="space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+              {/* Features - Expand card vertically on hover */}
+              <div className="space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 mt-4">
                 <h5 className="text-sm font-semibold text-foreground/80 mb-3">Key Features:</h5>
                 {coFounder.features.map((feature, featureIndex) => (
                   <div 
                     key={featureIndex} 
-                    className="flex items-center gap-2 transition-all duration-300"
+                    className="flex items-center gap-2 transition-all duration-300 py-1"
                     style={{ transitionDelay: `${featureIndex * 0.1}s` }}
                   >
                     <div className={`w-1.5 h-1.5 rounded-full ${coFounder.color.replace('text-', 'bg-')} animate-pulse`}></div>

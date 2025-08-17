@@ -121,47 +121,47 @@ const StartupJourney = () => {
   }, []);
 
   return (
-    <section id="journey" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card/20 relative overflow-hidden">
+    <section id="journey" className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card/20 relative overflow-hidden">
       <div className="max-w-5xl mx-auto relative">
         {/* Vertical timeline */}
         <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-accent-cyan to-accent-green opacity-30 transform -translate-x-1/2 z-0"></div>
         
         {/* Moving vehicle */}
         <div 
-          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-300 ease-out"
+          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-700 ease-out"
           style={{ 
-            top: `${20 + (scrollY * 60)}%`,
+            top: `${10 + (scrollY * 70)}%`,
           }}
         >
-          <div className="w-10 h-6 sm:w-12 sm:h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-lg">
-            <Car className="w-5 h-3 sm:w-6 sm:h-4 text-white" />
+          <div className="w-12 h-8 sm:w-14 sm:h-10 bg-gradient-primary rounded-lg flex items-center justify-center shadow-xl border-2 border-primary/30">
+            <Car className="w-6 h-4 sm:w-7 sm:h-5 text-white" />
           </div>
         </div>
 
         {/* Section header */}
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <Badge variant="outline" className="mb-4 px-4 py-2 text-sm border-primary/30">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+          <Badge variant="outline" className="mb-3 sm:mb-4 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm border-primary/30">
             Step by Step Process
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6">
             The Startup Journey — Step by Step
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
             Follow a clear, 5-stage path from idea to scale, with AI agents guiding you at every turn.
           </p>
         </div>
 
         {/* Journey steps */}
-        <div className="space-y-8 sm:space-y-12 lg:space-y-16 relative z-20">
+        <div className="space-y-6 sm:space-y-8 lg:space-y-12 relative z-20">
           {journeySteps.map((step, index) => (
             <div 
               key={step.phase}
-              className={`flex items-start gap-4 sm:gap-6 lg:gap-8 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} relative`}
+              className={`flex items-start gap-6 sm:gap-8 lg:gap-12 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} relative`}
             >
               {/* Timeline node */}
               <div className="absolute left-1/2 transform -translate-x-1/2 z-30">
-                <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl group hover:scale-125 transition-all duration-500`}>
-                  <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.color} group-hover:scale-110 transition-all duration-300`} />
+                <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl animate-bounce-in transition-all duration-500`}>
+                  <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.color} transition-all duration-300`} />
                 </div>
                 {/* Phase number */}
                 <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center animate-pulse">
@@ -171,7 +171,7 @@ const StartupJourney = () => {
 
               {/* Content card */}
               <Card 
-                className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in group relative overflow-hidden w-full max-w-sm sm:max-w-md lg:max-w-lg ${index % 2 === 0 ? 'ml-auto mr-4 sm:mr-8' : 'mr-auto ml-4 sm:ml-8'}`}
+                className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-sm sm:max-w-md lg:max-w-xl ${index % 2 === 0 ? 'ml-auto mr-6 sm:mr-10 lg:mr-16' : 'mr-auto ml-6 sm:ml-10 lg:ml-16'}`}
                 style={{ animationDelay: `${index * 0.3}s` }}
               >
                 {/* Phase badge */}
@@ -183,43 +183,43 @@ const StartupJourney = () => {
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{step.title}</h3>
                 <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
 
-                {/* Key Agents */}
-                <div className="mb-4 sm:mb-6">
-                  <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary"></div>
+                {/* Key Agents - Always visible */}
+                <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.2}s` }}>
+                  <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
                     KEY AGENTS
                   </h4>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {step.keyAgents.map((agent, agentIndex) => (
-                      <div key={agentIndex} className="flex items-center gap-2">
-                        <div className={`w-6 h-6 rounded-full ${step.bgColor} flex items-center justify-center`}>
-                          <div className={`w-2 h-2 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
+                      <div key={agentIndex} className="flex items-center gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.3 + agentIndex * 0.1}s` }}>
+                        <div className={`w-8 h-8 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
+                          <div className={`w-3 h-3 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
                         </div>
                         <div>
-                          <span className="text-sm font-medium">{agent.role}</span>
-                          <p className="text-xs text-muted-foreground">{agent.task}</p>
+                          <span className="text-sm font-semibold">{agent.role}</span>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{agent.task}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Helpful Tools */}
+                {/* Helpful Tools - Always visible when available */}
                 {step.helpfulTools.length > 0 && (
-                  <div className="mb-4 sm:mb-6">
-                    <h4 className="text-sm font-semibold text-accent-green mb-2 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-accent-green"></div>
+                  <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.4}s` }}>
+                    <h4 className="text-sm font-semibold text-accent-green mb-3 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
                       HELPFUL TOOLS
                     </h4>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {step.helpfulTools.map((tool, toolIndex) => (
-                        <div key={toolIndex} className="flex items-start gap-2">
-                          <div className="w-6 h-6 rounded bg-accent-green/10 flex items-center justify-center mt-0.5">
-                            <div className="w-3 h-3 rounded bg-accent-green/30"></div>
+                        <div key={toolIndex} className="flex items-start gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.5 + toolIndex * 0.1}s` }}>
+                          <div className="w-8 h-8 rounded-lg bg-accent-green/10 flex items-center justify-center mt-0.5 border border-accent-green/20">
+                            <div className="w-4 h-4 rounded bg-accent-green/40"></div>
                           </div>
                           <div>
-                            <span className="text-sm font-medium">{tool.name}</span>
-                            <p className="text-xs text-muted-foreground">{tool.desc}</p>
+                            <span className="text-sm font-semibold">{tool.name}</span>
+                            <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
                           </div>
                         </div>
                       ))}
@@ -228,13 +228,13 @@ const StartupJourney = () => {
                 )}
 
                 {/* Quote */}
-                <div className="bg-background/50 rounded-lg p-3 sm:p-4 border-l-4 border-primary/50">
-                  <p className="text-xs sm:text-sm text-muted-foreground italic">"{step.quote}"</p>
+                <div className="bg-background/50 rounded-lg p-3 sm:p-4 border-l-4 border-primary/50 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.6}s` }}>
+                  <p className="text-xs sm:text-sm text-muted-foreground italic leading-relaxed">"{step.quote}"</p>
                 </div>
 
-                {/* Hover glow effect */}
-                <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${step.color.replace('text-', 'bg-')}`}></div>
-                <div className="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300 bg-gradient-to-r from-primary/20 to-accent/20 blur-sm"></div>
+                {/* Background glow effect */}
+                <div className={`absolute inset-0 rounded-lg opacity-5 ${step.color.replace('text-', 'bg-')}`}></div>
+                <div className="absolute -inset-1 rounded-lg opacity-10 bg-gradient-to-r from-primary/10 to-accent/10 blur-sm"></div>
               </Card>
 
               {/* Connecting arrow (not on last item) */}
