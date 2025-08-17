@@ -152,101 +152,182 @@ const StartupJourney = () => {
         </div>
 
         {/* Journey steps */}
-        <div className="space-y-6 sm:space-y-8 lg:space-y-12 relative z-20">
-          {journeySteps.map((step, index) => (
-            <div 
-              key={step.phase}
-              className={`flex items-start gap-6 sm:gap-8 lg:gap-12 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} relative`}
-            >
-              {/* Timeline node */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 z-30">
-                <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl animate-bounce-in transition-all duration-500`}>
-                  <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.color} transition-all duration-300`} />
-                </div>
-                {/* Phase number */}
-                <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center animate-pulse">
-                  {index + 1}
-                </div>
-              </div>
-
-              {/* Content card */}
-              <Card 
-                className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-sm sm:max-w-md lg:max-w-xl ${index % 2 === 0 ? 'ml-auto mr-6 sm:mr-10 lg:mr-16' : 'mr-auto ml-6 sm:ml-10 lg:ml-16'}`}
-                style={{ animationDelay: `${index * 0.3}s` }}
+        <div className="space-y-8 sm:space-y-12 lg:space-y-16 relative z-20">
+          {journeySteps.map((step, index) => {
+            const isLeft = index % 2 === 0;
+            const cardProgress = Math.max(0, Math.min(1, (scrollY * journeySteps.length) - index));
+            const shouldHop = cardProgress > 0.1 && cardProgress < 0.9;
+            
+            return (
+              <div 
+                key={step.phase}
+                className="relative flex justify-between items-center w-full"
               >
-                {/* Phase badge */}
-                <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
-                  {step.phase}
-                </Badge>
-                
-                {/* Title and subtitle */}
-                <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{step.title}</h3>
-                <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
+                {/* Timeline node */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 z-30">
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl animate-bounce-in transition-all duration-500`}>
+                    <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.color} transition-all duration-300`} />
+                  </div>
+                  {/* Phase number */}
+                  <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center animate-pulse">
+                    {index + 1}
+                  </div>
+                </div>
 
-                {/* Key Agents - Always visible */}
-                <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.2}s` }}>
-                  <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                    KEY AGENTS
-                  </h4>
-                  <div className="space-y-3">
-                    {step.keyAgents.map((agent, agentIndex) => (
-                      <div key={agentIndex} className="flex items-center gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.3 + agentIndex * 0.1}s` }}>
-                        <div className={`w-8 h-8 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
-                          <div className={`w-3 h-3 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
-                        </div>
-                        <div>
-                          <span className="text-sm font-semibold">{agent.role}</span>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{agent.task}</p>
+                {/* Left side card */}
+                {isLeft && (
+                  <Card 
+                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${
+                      shouldHop ? 'transform -translate-y-4 scale-105' : ''
+                    }`}
+                    style={{ 
+                      animationDelay: `${index * 0.3}s`,
+                      marginRight: 'auto',
+                      marginLeft: '0'
+                    }}
+                  >
+                    {/* Phase badge */}
+                    <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
+                      {step.phase}
+                    </Badge>
+                    
+                    {/* Title and subtitle */}
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">{step.title}</h3>
+                    <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
+
+                    {/* Key Agents - Always visible */}
+                    <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.2}s` }}>
+                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                        KEY AGENTS
+                      </h4>
+                      <div className="space-y-3">
+                        {step.keyAgents.map((agent, agentIndex) => (
+                          <div key={agentIndex} className="flex items-center gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.3 + agentIndex * 0.1}s` }}>
+                            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
+                              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
+                            </div>
+                            <div>
+                              <span className="text-xs sm:text-sm font-semibold">{agent.role}</span>
+                              <p className="text-xs text-muted-foreground leading-relaxed">{agent.task}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Helpful Tools - Always visible when available */}
+                    {step.helpfulTools.length > 0 && (
+                      <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.4}s` }}>
+                        <h4 className="text-sm font-semibold text-accent-green mb-3 flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
+                          HELPFUL TOOLS
+                        </h4>
+                        <div className="space-y-2">
+                          {step.helpfulTools.map((tool, toolIndex) => (
+                            <div key={toolIndex} className="flex items-start gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.5 + toolIndex * 0.1}s` }}>
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-accent-green/10 flex items-center justify-center mt-0.5 border border-accent-green/20">
+                                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-accent-green/40"></div>
+                              </div>
+                              <div>
+                                <span className="text-xs sm:text-sm font-semibold">{tool.name}</span>
+                                <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    )}
 
-                {/* Helpful Tools - Always visible when available */}
-                {step.helpfulTools.length > 0 && (
-                  <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.4}s` }}>
-                    <h4 className="text-sm font-semibold text-accent-green mb-3 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
-                      HELPFUL TOOLS
-                    </h4>
-                    <div className="space-y-3">
-                      {step.helpfulTools.map((tool, toolIndex) => (
-                        <div key={toolIndex} className="flex items-start gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.5 + toolIndex * 0.1}s` }}>
-                          <div className="w-8 h-8 rounded-lg bg-accent-green/10 flex items-center justify-center mt-0.5 border border-accent-green/20">
-                            <div className="w-4 h-4 rounded bg-accent-green/40"></div>
-                          </div>
-                          <div>
-                            <span className="text-sm font-semibold">{tool.name}</span>
-                            <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
-                          </div>
-                        </div>
-                      ))}
+                    {/* Quote */}
+                    <div className="bg-background/50 rounded-lg p-2 sm:p-3 lg:p-4 border-l-4 border-primary/50 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.6}s` }}>
+                      <p className="text-xs sm:text-sm text-muted-foreground italic leading-relaxed">"{step.quote}"</p>
                     </div>
-                  </div>
+
+                    {/* Background glow effect */}
+                    <div className={`absolute inset-0 rounded-lg opacity-5 ${step.color.replace('text-', 'bg-')}`}></div>
+                    <div className="absolute -inset-1 rounded-lg opacity-10 bg-gradient-to-r from-primary/10 to-accent/10 blur-sm"></div>
+                  </Card>
                 )}
 
-                {/* Quote */}
-                <div className="bg-background/50 rounded-lg p-3 sm:p-4 border-l-4 border-primary/50 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.6}s` }}>
-                  <p className="text-xs sm:text-sm text-muted-foreground italic leading-relaxed">"{step.quote}"</p>
-                </div>
+                {/* Right side card */}
+                {!isLeft && (
+                  <Card 
+                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${
+                      shouldHop ? 'transform -translate-y-4 scale-105' : ''
+                    }`}
+                    style={{ 
+                      animationDelay: `${index * 0.3}s`,
+                      marginLeft: 'auto',
+                      marginRight: '0'
+                    }}
+                  >
+                    {/* Phase badge */}
+                    <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
+                      {step.phase}
+                    </Badge>
+                    
+                    {/* Title and subtitle */}
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">{step.title}</h3>
+                    <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
 
-                {/* Background glow effect */}
-                <div className={`absolute inset-0 rounded-lg opacity-5 ${step.color.replace('text-', 'bg-')}`}></div>
-                <div className="absolute -inset-1 rounded-lg opacity-10 bg-gradient-to-r from-primary/10 to-accent/10 blur-sm"></div>
-              </Card>
+                    {/* Key Agents - Always visible */}
+                    <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.2}s` }}>
+                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                        KEY AGENTS
+                      </h4>
+                      <div className="space-y-3">
+                        {step.keyAgents.map((agent, agentIndex) => (
+                          <div key={agentIndex} className="flex items-center gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.3 + agentIndex * 0.1}s` }}>
+                            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
+                              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
+                            </div>
+                            <div>
+                              <span className="text-xs sm:text-sm font-semibold">{agent.role}</span>
+                              <p className="text-xs text-muted-foreground leading-relaxed">{agent.task}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Connecting arrow (not on last item) */}
-              {index < journeySteps.length - 1 && (
-                <div className="absolute left-1/2 -bottom-4 sm:-bottom-6 transform -translate-x-1/2 z-20">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-card rounded-full flex items-center justify-center border-2 border-primary/30 animate-bounce">
-                    <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+                    {/* Helpful Tools - Always visible when available */}
+                    {step.helpfulTools.length > 0 && (
+                      <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.4}s` }}>
+                        <h4 className="text-sm font-semibold text-accent-green mb-3 flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
+                          HELPFUL TOOLS
+                        </h4>
+                        <div className="space-y-2">
+                          {step.helpfulTools.map((tool, toolIndex) => (
+                            <div key={toolIndex} className="flex items-start gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.5 + toolIndex * 0.1}s` }}>
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-accent-green/10 flex items-center justify-center mt-0.5 border border-accent-green/20">
+                                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-accent-green/40"></div>
+                              </div>
+                              <div>
+                                <span className="text-xs sm:text-sm font-semibold">{tool.name}</span>
+                                <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Quote */}
+                    <div className="bg-background/50 rounded-lg p-2 sm:p-3 lg:p-4 border-l-4 border-primary/50 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.6}s` }}>
+                      <p className="text-xs sm:text-sm text-muted-foreground italic leading-relaxed">"{step.quote}"</p>
+                    </div>
+
+                    {/* Background glow effect */}
+                    <div className={`absolute inset-0 rounded-lg opacity-5 ${step.color.replace('text-', 'bg-')}`}></div>
+                    <div className="absolute -inset-1 rounded-lg opacity-10 bg-gradient-to-r from-primary/10 to-accent/10 blur-sm"></div>
+                  </Card>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* CTA section */}

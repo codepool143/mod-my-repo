@@ -106,9 +106,7 @@ const PricingSection = () => {
               key={plan.name}
               className={`relative card-gradient border-border/50 p-4 sm:p-6 lg:p-8 hover-lift animate-bounce-in group cursor-pointer overflow-hidden transition-all duration-500 ${
                 plan.popular ? 'ring-2 ring-primary/50 scale-105' : ''
-              } ${
-                expandedCards.has(plan.name) ? 'min-h-[500px] sm:min-h-[550px]' : 'min-h-[300px] sm:min-h-[350px]'
-              }`}
+              } min-h-[450px] sm:min-h-[500px]`}
               style={{ animationDelay: `${index * 0.2}s` }}
               onMouseEnter={() => handleCardHover(plan.name)}
             >
@@ -142,18 +140,18 @@ const PricingSection = () => {
                 </div>
               </div>
 
-              {/* Features - Always visible when expanded */}
-              <div className={`space-y-2 sm:space-y-3 mb-6 sm:mb-8 transition-all duration-500 ${
-                expandedCards.has(plan.name) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}>
+              {/* Features - Always visible */}
+              <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 transition-all duration-500">
                 <h5 className="text-sm font-semibold text-foreground/80 mb-3">Features:</h5>
                 {plan.features.map((feature, featureIndex) => (
                   <div 
                     key={featureIndex} 
-                    className="flex items-start gap-3 transition-all duration-300"
+                    className={`flex items-start gap-3 transition-all duration-300 hover:scale-105 hover:translate-x-1 ${
+                      expandedCards.has(plan.name) ? 'animate-pulse' : ''
+                    }`}
                     style={{ transitionDelay: `${featureIndex * 0.1}s` }}
                   >
-                    <Check className={`w-4 h-4 sm:w-5 sm:h-5 ${plan.color} mt-0.5 flex-shrink-0 animate-pulse`} />
+                    <Check className={`w-4 h-4 sm:w-5 sm:h-5 ${plan.color} mt-0.5 flex-shrink-0`} />
                     <span className="text-xs sm:text-sm text-foreground">{feature}</span>
                   </div>
                 ))}

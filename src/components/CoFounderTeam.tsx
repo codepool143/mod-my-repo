@@ -68,7 +68,7 @@ const CoFounderTeam = () => {
           {coFounders.map((coFounder, index) => (
             <Card 
               key={coFounder.id} 
-              className={`card-gradient border-border/50 p-4 sm:p-6 hover-lift animate-bounce-in group cursor-pointer relative overflow-hidden transition-all duration-500 hover:min-h-[480px] min-h-[280px]`}
+              className={`card-gradient border-border/50 p-4 sm:p-6 hover-lift animate-bounce-in group cursor-pointer relative overflow-hidden transition-all duration-500 h-auto`}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Icon */}
@@ -89,7 +89,7 @@ const CoFounderTeam = () => {
               </p>
 
               {/* Features - Expand card vertically on hover */}
-              <div className="space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 mt-4">
+              <div className="space-y-2 max-h-0 opacity-0 group-hover:max-h-96 group-hover:opacity-100 overflow-hidden transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 mt-4">
                 <h5 className="text-sm font-semibold text-foreground/80 mb-3">Key Features:</h5>
                 {coFounder.features.map((feature, featureIndex) => (
                   <div 
