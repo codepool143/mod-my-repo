@@ -94,7 +94,7 @@ const PricingSection = () => {
             Choose Your Growth Plan
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Start free and scale as you grow. All plans include our core AI guidance, 
+            Start free and scale as you grow. All plans include our core AI guidance,
             with advanced features for serious entrepreneurs.
           </p>
         </div>
@@ -102,11 +102,10 @@ const PricingSection = () => {
         {/* Pricing cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 lg:mb-16">
           {pricingPlans.map((plan, index) => (
-            <Card 
+            <Card
               key={plan.name}
-              className={`relative card-gradient border-border/50 p-4 sm:p-6 lg:p-8 hover-lift animate-bounce-in group cursor-pointer overflow-hidden transition-all duration-500 ${
-                plan.popular ? 'ring-2 ring-primary/50 scale-105' : ''
-              } min-h-[450px] sm:min-h-[500px]`}
+              className={`relative card-gradient border-border/50 p-4 sm:p-6 lg:p-8 hover-lift animate-bounce-in group cursor-pointer overflow-hidden transition-all duration-500 ${plan.popular ? 'ring-2 ring-primary/50 scale-105' : ''
+                } min-h-[450px] sm:min-h-[500px]`}
               style={{ animationDelay: `${index * 0.2}s` }}
               onMouseEnter={() => handleCardHover(plan.name)}
             >
@@ -128,7 +127,7 @@ const PricingSection = () => {
               <div className="mb-4 sm:mb-6">
                 <h3 className="text-xl sm:text-2xl font-bold mb-2">{plan.name}</h3>
                 <p className="text-sm sm:text-base text-muted-foreground mb-4">{plan.description}</p>
-                
+
                 <div className="flex items-baseline gap-1 mb-4 sm:mb-6">
                   <span className="text-3xl sm:text-4xl font-bold">{plan.price}</span>
                   {plan.price !== "Free" && plan.price !== "Custom" && (
@@ -144,20 +143,19 @@ const PricingSection = () => {
               <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 transition-all duration-500">
                 <h5 className="text-sm font-semibold text-foreground/80 mb-3">Features:</h5>
                 {plan.features.map((feature, featureIndex) => (
-                  <div 
-                    key={featureIndex} 
-                    className={`flex items-start gap-3 transition-all duration-300 hover:scale-105 hover:translate-x-1 ${
-                      expandedCards.has(plan.name) ? 'animate-pulse' : ''
-                    }`}
+                  <div
+                    key={featureIndex}
+                    className="flex items-start gap-3 transition-all duration-300 hover:scale-105 hover:translate-x-1"
                     style={{ transitionDelay: `${featureIndex * 0.1}s` }}
                   >
                     <Check className={`w-4 h-4 sm:w-5 sm:h-5 ${plan.color} mt-0.5 flex-shrink-0`} />
                     <span className="text-xs sm:text-sm text-foreground">{feature}</span>
                   </div>
+
                 ))}
                 {plan.limitations.map((limitation, limitIndex) => (
-                  <div 
-                    key={limitIndex} 
+                  <div
+                    key={limitIndex}
                     className="flex items-start gap-3 opacity-60 transition-all duration-300"
                     style={{ transitionDelay: `${(plan.features.length + limitIndex) * 0.1}s` }}
                   >
@@ -171,21 +169,20 @@ const PricingSection = () => {
 
               {/* CTA button */}
               <div className="mt-auto">
-                <Button 
-                  className={`w-full transition-all duration-300 group-hover:scale-105 ${
-                    plan.popular 
-                      ? 'button-gradient' 
+                <Button
+                  className={`w-full transition-all duration-300 group-hover:scale-105 ${plan.popular
+                      ? 'button-gradient'
                       : 'border-border/50 hover:bg-card/50'
-                  }`}
+                    }`}
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
                 >
-                  {plan.price === "Free" ? "Get Started" : 
-                   plan.price === "Custom" ? "Contact Sales" : 
-                   "Start Free Trial"}
+                  {plan.price === "Free" ? "Get Started" :
+                    plan.price === "Custom" ? "Contact Sales" :
+                      "Start Free Trial"}
                 </Button>
               </div>
-              
+
               {/* Hover effects */}
               <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${plan.color.replace('text-', 'bg-')}`}></div>
               <div className="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300 bg-gradient-to-r from-primary/20 to-accent/20 blur-sm"></div>
@@ -209,7 +206,7 @@ const PricingSection = () => {
               <span>Cancel anytime</span>
             </div>
           </div>
-          
+
           <p className="text-sm sm:text-base text-muted-foreground">
             Need a custom plan? <span className="text-primary hover:underline cursor-pointer">Contact our sales team</span>
           </p>

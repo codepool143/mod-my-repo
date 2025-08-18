@@ -202,7 +202,7 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: shimmer 3s ease-in-out infinite;
+    animation: shimmer 20s ease-in-out infinite;
   }
 }
 

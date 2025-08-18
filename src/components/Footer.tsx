@@ -130,12 +130,6 @@ const Footer = () => {
             <span className="hover:text-foreground transition-colors cursor-pointer">Terms of Service</span>
             <span className="hover:text-foreground transition-colors cursor-pointer">Cookie Policy</span>
           </div>
-          
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-            <span>Made with</span>
-            <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 fill-current animate-pulse" />
-            <span>for entrepreneurs</span>
-          </div>
         </div>
       </div>
     </footer>

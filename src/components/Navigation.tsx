@@ -52,14 +52,18 @@ const Navigation = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-3 lg:gap-4">
-            <Button variant="outline" className="text-sm border-border/50 hover:bg-card/50">
-              Sign In
-            </Button>
-            <Button className="button-gradient text-sm">
-              Get Started
-            </Button>
-          </div>
+         <div className="hidden md:flex items-center gap-3 lg:gap-4">
+  <Button
+    className="px-6 py-2 rounded-lg 
+               bg-gradient-to-r from-indigo-500 to-purple-500
+               text-white font-medium
+               shadow-md transition-all duration-300 ease-out
+               hover:shadow-lg hover:from-purple-500 hover:to-pink-500 hover:-translate-y-0.5"
+  >
+    Join Waitlist
+  </Button>
+</div>
+
 
           {/* Mobile menu button */}
           <button
@@ -95,7 +99,7 @@ const Navigation = () => {
                   Sign In
                 </Button>
                 <Button className="w-full button-gradient">
-                  Get Started
+                  Join Waitlist
                 </Button>
               </div>
             </div>

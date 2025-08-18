@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, ArrowDown, Lightbulb, Target, Rocket, TrendingUp, Users, Award, Car } from "lucide-react";
 import { useEffect, useState } from "react";
 
+
+
 const journeySteps = [
   {
     phase: "Stage 1",
@@ -106,37 +108,49 @@ const StartupJourney = () => {
         const sectionTop = rect.top;
         const sectionHeight = rect.height;
         const windowHeight = window.innerHeight;
-        
-        // Calculate scroll progress within the section
-        if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
-          const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (sectionHeight + windowHeight)));
-          setScrollY(progress);
-        }
+
+        // Calculate top relative to viewport
+        const start = sectionTop - windowHeight; // before section appears
+        const end = sectionTop + sectionHeight; // after section scrolls past
+
+        // Clamp position
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (sectionHeight + windowHeight)));
+
+        // Use progress directly as pixels or % for top
+        setScrollY(progress);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial call
+    handleScroll(); // initial
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+
+  // Timeline line start & end
+  const lineTop = 5; // same as top in %
+  const lineBottom = 30; // 100 - 8%
+
+  // Car top calculation
+  const carTop = 0 + lineTop + (lineBottom - lineTop) * scrollY;
+
 
   return (
     <section id="journey" className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card/20 relative overflow-hidden">
       <div className="max-w-5xl mx-auto relative">
         {/* Vertical timeline */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-accent-cyan to-accent-green opacity-30 transform -translate-x-1/2 z-0"></div>
-        
+        <div className="absolute left-1/2 w-1 bg-gradient-to-b from-primary via-accent-cyan to-accent-green opacity-30 transform -translate-x-1/2 z-0" style={{ top: '7%', bottom: '8%' }}></div>
+
         {/* Moving vehicle */}
-        <div 
-          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-700 ease-out"
-          style={{ 
-            top: `${10 + (scrollY * 70)}%`,
-          }}
+        <div
+          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-100 ease-out"
+          style={{ top: `${scrollY * 100}%` }} // moves exactly with scroll
         >
           <div className="w-12 h-8 sm:w-14 sm:h-10 bg-gradient-primary rounded-lg flex items-center justify-center shadow-xl border-2 border-primary/30">
             <Car className="w-6 h-4 sm:w-7 sm:h-5 text-white" />
           </div>
         </div>
+
 
         {/* Section header */}
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
@@ -157,9 +171,9 @@ const StartupJourney = () => {
             const isLeft = index % 2 === 0;
             const cardProgress = Math.max(0, Math.min(1, (scrollY * journeySteps.length) - index));
             const shouldHop = cardProgress > 0.1 && cardProgress < 0.9;
-            
+
             return (
-              <div 
+              <div
                 key={step.phase}
                 className="relative flex justify-between items-center w-full"
               >
@@ -176,11 +190,10 @@ const StartupJourney = () => {
 
                 {/* Left side card */}
                 {isLeft && (
-                  <Card 
-                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${
-                      shouldHop ? 'transform -translate-y-4 scale-105' : ''
-                    }`}
-                    style={{ 
+                  <Card
+                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${shouldHop ? 'transform -translate-y-4 scale-105' : ''
+                      }`}
+                    style={{
                       animationDelay: `${index * 0.3}s`,
                       marginRight: 'auto',
                       marginLeft: '0'
@@ -190,7 +203,7 @@ const StartupJourney = () => {
                     <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
                       {step.phase}
                     </Badge>
-                    
+
                     {/* Title and subtitle */}
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">{step.title}</h3>
                     <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
@@ -252,11 +265,10 @@ const StartupJourney = () => {
 
                 {/* Right side card */}
                 {!isLeft && (
-                  <Card 
-                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${
-                      shouldHop ? 'transform -translate-y-4 scale-105' : ''
-                    }`}
-                    style={{ 
+                  <Card
+                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${shouldHop ? 'transform -translate-y-4 scale-105' : ''
+                      }`}
+                    style={{
                       animationDelay: `${index * 0.3}s`,
                       marginLeft: 'auto',
                       marginRight: '0'
@@ -266,7 +278,7 @@ const StartupJourney = () => {
                     <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
                       {step.phase}
                     </Badge>
-                    
+
                     {/* Title and subtitle */}
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">{step.title}</h3>
                     <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>

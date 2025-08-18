@@ -8,6 +8,14 @@ export default {
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
 	],
+	 safelist: [
+    'text-accent-cyan',
+    'bg-accent-cyan/10',
+    'text-accent-pink',
+    'bg-accent-pink/10',
+    'text-accent-green',
+    'bg-accent-green/10',
+  ],
 	prefix: "",
 	theme: {
 		container: {
@@ -44,9 +52,9 @@ export default {
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))',
-					cyan: 'hsl(var(--accent-cyan))',
-					pink: 'hsl(var(--accent-pink))',
-					green: 'hsl(var(--accent-green))'
+					cyan: 'hsl(var(--accent-cyan) / <alpha-value>)',
+					pink: 'hsl(var(--accent-pink) / <alpha-value>)',
+					green: 'hsl(var(--accent-green) / <alpha-value>)',
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
