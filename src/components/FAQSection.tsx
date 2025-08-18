@@ -59,10 +59,10 @@ const FAQSection = () => {
             <AccordionItem 
               key={index} 
               value={`item-${index}`}
-              className="card-gradient border border-border/50 rounded-lg px-4 sm:px-6 data-[state=open]:shadow-lg hover-lift transition-all duration-300 animate-slide-in-left group"
+              className="card-gradient border border-border/50 rounded-lg px-4 sm:px-6 data-[state=open]:shadow-lg transition-all duration-300"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold hover:text-primary transition-all duration-300 py-4 sm:py-6 hover:no-underline group-hover:translate-x-2">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-semibold hover:text-primary transition-all duration-300 py-4 sm:py-6 hover:no-underline">
                 {faq.question}
               </AccordionTrigger>
               <AccordionContent className="text-sm sm:text-base text-muted-foreground leading-relaxed pb-4 sm:pb-6">

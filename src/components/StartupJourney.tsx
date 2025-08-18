@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, ArrowDown, Lightbulb, Target, Rocket, TrendingUp, Users, Award, Car } from "lucide-react";
+import { CheckCircle, ArrowDown, Lightbulb, Target, TrendingUp, Users, Award } from "lucide-react";
 import { useEffect, useState } from "react";
+import rocketImage from "@/assets/rocket.png";
 
 
 
@@ -10,11 +11,9 @@ const journeySteps = [
     phase: "Stage 1",
     title: "Ideation + Research",
     subtitle: "Is my idea even valid?",
-    description: "Market research, competitive analysis, and idea refinement with AI insights.",
     icon: Lightbulb,
     color: "text-accent-cyan",
     bgColor: "bg-accent-cyan/10",
-    duration: "Week 1-2",
     keyAgents: [
       { role: "CEO", task: "Validate your vision" },
       { role: "CTO", task: "Explore feasibility" },
@@ -30,11 +29,9 @@ const journeySteps = [
     phase: "Stage 2",
     title: "Planning + Strategy",
     subtitle: "What's my go-to-market plan?",
-    description: "Business model canvas, technical architecture, and go-to-market strategy.",
     icon: Target,
     color: "text-primary",
     bgColor: "bg-primary/10",
-    duration: "Week 3-4",
     keyAgents: [
       { role: "CMO", task: "Plan early marketing steps" },
       { role: "CFO", task: "Draft pricing models" },
@@ -49,11 +46,9 @@ const journeySteps = [
     phase: "Stage 3",
     title: "Building the Product",
     subtitle: "How do I actually build this?",
-    description: "MVP development, iterative feedback, and feature prioritization.",
-    icon: Rocket,
+    icon: TrendingUp,
     color: "text-accent-pink",
     bgColor: "bg-accent-pink/10",
-    duration: "Week 5-12",
     keyAgents: [
       { role: "CTO", task: "Guide tech decisions" },
       { role: "COO", task: "Track execution flow" }
@@ -65,11 +60,9 @@ const journeySteps = [
     phase: "Stage 4",
     title: "Fundraising + Pitching",
     subtitle: "How do I raise capital?",
-    description: "Launch strategy, customer acquisition, and performance optimization.",
-    icon: TrendingUp,
+    icon: Award,
     color: "text-accent-green",
     bgColor: "bg-accent-green/10",
-    duration: "Week 13+",
     keyAgents: [
       { role: "Investor Agent", task: "Practice pitching, get skilled" },
       { role: "CFO", task: "Build the cap table, financial model" }
@@ -81,11 +74,9 @@ const journeySteps = [
     phase: "Stage 5",
     title: "Scaling + Hiring",
     subtitle: "How do I grow fast and hire smart?",
-    description: "Hiring guidance, operational systems, and scaling infrastructure.",
     icon: Users,
     color: "text-primary",
     bgColor: "bg-primary/10",
-    duration: "Ongoing",
     keyAgents: [
       { role: "HR Agent", task: "Recruit first team" },
       { role: "COO", task: "Optimize operations" },
@@ -99,8 +90,11 @@ const journeySteps = [
 
 const StartupJourney = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [rocketDirection, setRocketDirection] = useState('up');
 
   useEffect(() => {
+    let lastScrollTop = 0;
+    
     const handleScroll = () => {
       const section = document.getElementById('journey');
       if (section) {
@@ -109,20 +103,23 @@ const StartupJourney = () => {
         const sectionHeight = rect.height;
         const windowHeight = window.innerHeight;
 
-        // Calculate top relative to viewport
-        const start = sectionTop - windowHeight; // before section appears
-        const end = sectionTop + sectionHeight; // after section scrolls past
-
-        // Clamp position
+        // Calculate progress through the section
         const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (sectionHeight + windowHeight)));
-
-        // Use progress directly as pixels or % for top
         setScrollY(progress);
+
+        // Determine rocket direction
+        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScrollTop > lastScrollTop) {
+          setRocketDirection('down');
+        } else {
+          setRocketDirection('up');
+        }
+        lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // initial
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -133,13 +130,17 @@ const StartupJourney = () => {
         {/* Vertical timeline */}
         <div className="absolute left-1/2 w-1 bg-gradient-to-b from-primary via-accent-cyan to-accent-green opacity-30 transform -translate-x-1/2 z-0" style={{ top: '7%', bottom: '8%' }}></div>
 
-        {/* Moving vehicle */}
+        {/* Moving Rocket */}
         <div
-          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-100 ease-out"
-          style={{ top: `${scrollY * 100}%` }} // moves exactly with scroll
+          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-200 ease-out"
+          style={{ top: `${scrollY * 85}%` }}
         >
-          <div className="w-12 h-8 sm:w-14 sm:h-10 bg-gradient-primary rounded-lg flex items-center justify-center shadow-xl border-2 border-primary/30">
-            <Car className="w-6 h-4 sm:w-7 sm:h-5 text-white" />
+          <div className={`w-12 h-12 sm:w-16 sm:h-16 transition-transform duration-300 ${rocketDirection === 'down' ? 'rotate-180' : 'rotate-0'}`}>
+            <img 
+              src={rocketImage} 
+              alt="Rocket" 
+              className="w-full h-full object-contain filter drop-shadow-lg"
+            />
           </div>
         </div>
 
@@ -158,24 +159,27 @@ const StartupJourney = () => {
         </div>
 
         {/* Journey steps */}
-        <div className="space-y-8 sm:space-y-12 lg:space-y-16 relative z-20">
+        <div className="space-y-16 sm:space-y-20 lg:space-y-24 relative z-20">
           {journeySteps.map((step, index) => {
             const isLeft = index % 2 === 0;
-            const cardProgress = Math.max(0, Math.min(1, (scrollY * journeySteps.length) - index));
-            const shouldHop = cardProgress > 0.1 && cardProgress < 0.9;
+            const rocketProgress = scrollY * (journeySteps.length + 1);
+            const stepProgress = rocketProgress - index;
+            const shouldAnimate = stepProgress > 0.5 && stepProgress < 1.5;
 
             return (
               <div
                 key={step.phase}
-                className="relative flex justify-between items-center w-full"
+                className="relative flex items-center w-full min-h-[200px]"
               >
                 {/* Timeline node */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 z-30">
-                  <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl animate-bounce-in transition-all duration-500`}>
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl transition-all duration-500 ${
+                    shouldAnimate ? 'animate-pulse scale-110' : ''
+                  }`}>
                     <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.color} transition-all duration-300`} />
                   </div>
                   {/* Phase number */}
-                  <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center animate-pulse">
+                  <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center">
                     {index + 1}
                   </div>
                 </div>
@@ -183,12 +187,12 @@ const StartupJourney = () => {
                 {/* Left side card */}
                 {isLeft && (
                   <Card
-                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${shouldHop ? 'transform -translate-y-4 scale-105' : ''
-                      }`}
+                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-lg transition-all duration-700 ${
+                      shouldAnimate ? 'transform -translate-y-6 shadow-xl shadow-primary/20' : ''
+                    }`}
                     style={{
-                      animationDelay: `${index * 0.3}s`,
-                      marginRight: 'auto',
-                      marginLeft: '0'
+                      marginLeft: '2rem',
+                      marginRight: '50%'
                     }}
                   >
                     {/* Phase badge */}
@@ -258,12 +262,12 @@ const StartupJourney = () => {
                 {/* Right side card */}
                 {!isLeft && (
                   <Card
-                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 animate-bounce-in relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-md transition-all duration-700 ${shouldHop ? 'transform -translate-y-4 scale-105' : ''
-                      }`}
+                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-lg transition-all duration-700 ${
+                      shouldAnimate ? 'transform -translate-y-6 shadow-xl shadow-primary/20' : ''
+                    }`}
                     style={{
-                      animationDelay: `${index * 0.3}s`,
-                      marginLeft: 'auto',
-                      marginRight: '0'
+                      marginRight: '2rem',
+                      marginLeft: '50%'
                     }}
                   >
                     {/* Phase badge */}
