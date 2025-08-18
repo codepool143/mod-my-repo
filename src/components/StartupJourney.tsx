@@ -127,14 +127,6 @@ const StartupJourney = () => {
   }, []);
 
 
-  // Timeline line start & end
-  const lineTop = 5; // same as top in %
-  const lineBottom = 30; // 100 - 8%
-
-  // Car top calculation
-  const carTop = 0 + lineTop + (lineBottom - lineTop) * scrollY;
-
-
   return (
     <section id="journey" className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card/20 relative overflow-hidden">
       <div className="max-w-5xl mx-auto relative">
