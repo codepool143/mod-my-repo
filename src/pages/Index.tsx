@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import CoFounderTeam from "@/components/CoFounderTeam";
+import DynamicChatSection from "@/components/DynamicChatSection";
 import StartupJourney from "@/components/StartupJourney";
 import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
@@ -14,6 +15,9 @@ const Index = () => {
         <HeroSection />
         <section id="features">
           <CoFounderTeam />
+        </section>
+        <section id="chat">
+          <DynamicChatSection />
         </section>
         <section id="journey">
           <StartupJourney />

@@ -2,9 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, ArrowDown, Lightbulb, Target, TrendingUp, Users, Award } from "lucide-react";
 import { useEffect, useState } from "react";
-import rocketImage from "@/assets/rocket.png";
-
-
+import rocketImage from "@/assets/rocket-transparent.png";
 
 const journeySteps = [
   {
@@ -90,32 +88,22 @@ const journeySteps = [
 
 const StartupJourney = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [rocketDirection, setRocketDirection] = useState('up');
+  const [rocketDirection, setRocketDirection] = useState('down');
 
   useEffect(() => {
     let lastScrollTop = 0;
     
     const handleScroll = () => {
-      const section = document.getElementById('journey');
-      if (section) {
-        const rect = section.getBoundingClientRect();
-        const sectionTop = rect.top;
-        const sectionHeight = rect.height;
-        const windowHeight = window.innerHeight;
+      const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      setScrollY(currentScrollTop);
 
-        // Calculate progress through the section
-        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (sectionHeight + windowHeight)));
-        setScrollY(progress);
-
-        // Determine rocket direction
-        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        if (currentScrollTop > lastScrollTop) {
-          setRocketDirection('down');
-        } else {
-          setRocketDirection('up');
-        }
-        lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+      // Determine rocket direction
+      if (currentScrollTop > lastScrollTop) {
+        setRocketDirection('down');
+      } else {
+        setRocketDirection('up');
       }
+      lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -123,27 +111,11 @@ const StartupJourney = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-
   return (
     <section id="journey" className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-card/20 relative overflow-hidden">
-      <div className="max-w-5xl mx-auto relative">
+      <div className="max-w-7xl mx-auto relative">
         {/* Vertical timeline */}
-        <div className="absolute left-1/2 w-1 bg-gradient-to-b from-primary via-accent-cyan to-accent-green opacity-30 transform -translate-x-1/2 z-0" style={{ top: '7%', bottom: '8%' }}></div>
-
-        {/* Moving Rocket */}
-        <div
-          className="absolute left-1/2 transform -translate-x-1/2 z-10 transition-all duration-200 ease-out"
-          style={{ top: `${scrollY * 85}%` }}
-        >
-          <div className={`w-12 h-12 sm:w-16 sm:h-16 transition-transform duration-300 ${rocketDirection === 'down' ? 'rotate-180' : 'rotate-0'}`}>
-            <img 
-              src={rocketImage} 
-              alt="Rocket" 
-              className="w-full h-full object-contain filter drop-shadow-lg"
-            />
-          </div>
-        </div>
-
+        <div className="absolute left-1/2 w-1 bg-gradient-to-b from-primary via-accent-cyan to-accent-green opacity-30 transform -translate-x-1/2 z-0" style={{ top: '15%', bottom: '15%' }}></div>
 
         {/* Section header */}
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
@@ -158,185 +130,109 @@ const StartupJourney = () => {
           </p>
         </div>
 
-        {/* Journey steps */}
-        <div className="space-y-16 sm:space-y-20 lg:space-y-24 relative z-20">
+        {/* Journey Steps - Positioned at screen edges, away from center */}
+        <div className="relative">
           {journeySteps.map((step, index) => {
-            const isLeft = index % 2 === 0;
-            const rocketProgress = scrollY * (journeySteps.length + 1);
-            const stepProgress = rocketProgress - index;
-            const shouldAnimate = stepProgress > 0.5 && stepProgress < 1.5;
-
+            const progress = Math.max(0, Math.min(1, (scrollY - 100) / (500 * journeySteps.length)));
+            const stepProgress = Math.max(0, Math.min(1, (progress * journeySteps.length) - index));
+            const isRocketNear = stepProgress > 0.4 && stepProgress < 0.9;
+            const shouldHop = stepProgress > 0.5 && stepProgress < 0.8;
+            
             return (
               <div
                 key={step.phase}
-                className="relative flex items-center w-full min-h-[200px]"
+                className={`absolute transition-all duration-500 ${
+                  index % 2 === 0 ? 'left-0 sm:left-4 lg:left-8' : 'right-0 sm:right-4 lg:right-8'
+                } ${shouldHop ? 'animate-bounce-in' : ''}`}
+                style={{
+                  top: `${index * 250 + 150}px`,
+                  transform: shouldHop ? 'translateY(-30px) scale(1.05)' : 'translateY(0) scale(1)',
+                }}
               >
-                {/* Timeline node */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 z-30">
-                  <div className={`w-12 h-12 sm:w-16 sm:h-16 ${step.bgColor} rounded-full flex items-center justify-center border-4 border-background shadow-xl transition-all duration-500 ${
-                    shouldAnimate ? 'animate-pulse scale-110' : ''
+                <Card className={`card-gradient border-border/50 p-4 sm:p-6 w-64 sm:w-72 lg:w-80 transition-all duration-500 ${
+                  shouldHop ? 'shadow-2xl border-primary/50 bg-gradient-to-br from-primary/5 to-accent/5' : 'opacity-80'
+                }`}>
+                  {/* Logo with dark fill when rocket is near */}
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${step.color.replace('text-', 'from-').replace('text-', 'to-')}/80 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 ${
+                    isRocketNear ? 'brightness-75 ring-2 ring-primary/30' : ''
                   }`}>
-                    <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.color} transition-all duration-300`} />
+                    <step.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                   </div>
-                  {/* Phase number */}
-                  <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center">
-                    {index + 1}
-                  </div>
-                </div>
-
-                {/* Left side card */}
-                {isLeft && (
-                  <Card
-                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-lg transition-all duration-700 ${
-                      shouldAnimate ? 'transform -translate-y-6 shadow-xl shadow-primary/20' : ''
-                    }`}
-                    style={{
-                      marginLeft: '2rem',
-                      marginRight: '50%'
-                    }}
-                  >
-                    {/* Phase badge */}
-                    <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
-                      {step.phase}
-                    </Badge>
-
-                    {/* Title and subtitle */}
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">{step.title}</h3>
-                    <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
-
-                    {/* Key Agents - Always visible */}
-                    <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.2}s` }}>
-                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                        KEY AGENTS
-                      </h4>
-                      <div className="space-y-3">
-                        {step.keyAgents.map((agent, agentIndex) => (
-                          <div key={agentIndex} className="flex items-center gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.3 + agentIndex * 0.1}s` }}>
-                            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
-                              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
-                            </div>
-                            <div>
-                              <span className="text-xs sm:text-sm font-semibold">{agent.role}</span>
-                              <p className="text-xs text-muted-foreground leading-relaxed">{agent.task}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Helpful Tools - Always visible when available */}
-                    {step.helpfulTools.length > 0 && (
-                      <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.4}s` }}>
-                        <h4 className="text-sm font-semibold text-accent-green mb-3 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
-                          HELPFUL TOOLS
-                        </h4>
-                        <div className="space-y-2">
-                          {step.helpfulTools.map((tool, toolIndex) => (
-                            <div key={toolIndex} className="flex items-start gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.5 + toolIndex * 0.1}s` }}>
-                              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-accent-green/10 flex items-center justify-center mt-0.5 border border-accent-green/20">
-                                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-accent-green/40"></div>
-                              </div>
-                              <div>
-                                <span className="text-xs sm:text-sm font-semibold">{tool.name}</span>
-                                <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
-                              </div>
-                            </div>
-                          ))}
+                  
+                  <Badge variant="secondary" className="mb-3 text-xs">
+                    {step.phase}
+                  </Badge>
+                  
+                  <h3 className="text-lg sm:text-xl font-bold mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-4 italic">{step.subtitle}</p>
+                  
+                  <div className="space-y-3 mb-4">
+                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                      KEY AGENTS
+                    </h4>
+                    {step.keyAgents.map((agent, agentIndex) => (
+                      <div key={agentIndex} className="flex items-center gap-3">
+                        <div className={`w-6 h-6 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
+                          <div className={`w-2 h-2 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold">{agent.role}</span>
+                          <p className="text-xs text-muted-foreground">{agent.task}</p>
                         </div>
                       </div>
-                    )}
-
-                    {/* Quote */}
-                    <div className="bg-background/50 rounded-lg p-2 sm:p-3 lg:p-4 border-l-4 border-primary/50 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.6}s` }}>
-                      <p className="text-xs sm:text-sm text-muted-foreground italic leading-relaxed">"{step.quote}"</p>
-                    </div>
-
-                    {/* Background glow effect */}
-                    <div className={`absolute inset-0 rounded-lg opacity-5 ${step.color.replace('text-', 'bg-')}`}></div>
-                    <div className="absolute -inset-1 rounded-lg opacity-10 bg-gradient-to-r from-primary/10 to-accent/10 blur-sm"></div>
-                  </Card>
-                )}
-
-                {/* Right side card */}
-                {!isLeft && (
-                  <Card
-                    className={`card-gradient border-border/50 p-4 sm:p-6 lg:p-8 relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-lg transition-all duration-700 ${
-                      shouldAnimate ? 'transform -translate-y-6 shadow-xl shadow-primary/20' : ''
-                    }`}
-                    style={{
-                      marginRight: '2rem',
-                      marginLeft: '50%'
-                    }}
-                  >
-                    {/* Phase badge */}
-                    <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs animate-zoom-in" style={{ animationDelay: `${index * 0.3 + 0.1}s` }}>
-                      {step.phase}
-                    </Badge>
-
-                    {/* Title and subtitle */}
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">{step.title}</h3>
-                    <p className="text-sm sm:text-base text-muted-foreground italic mb-4">{step.subtitle}</p>
-
-                    {/* Key Agents - Always visible */}
-                    <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.2}s` }}>
-                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                        KEY AGENTS
+                    ))}
+                  </div>
+                  
+                  {step.helpfulTools.length > 0 && (
+                    <div className="space-y-2 mb-4">
+                      <h4 className="text-sm font-semibold text-accent-green flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
+                        HELPFUL TOOLS
                       </h4>
-                      <div className="space-y-3">
-                        {step.keyAgents.map((agent, agentIndex) => (
-                          <div key={agentIndex} className="flex items-center gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.3 + agentIndex * 0.1}s` }}>
-                            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full ${step.bgColor} flex items-center justify-center border-2 border-background shadow-md`}>
-                              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
-                            </div>
-                            <div>
-                              <span className="text-xs sm:text-sm font-semibold">{agent.role}</span>
-                              <p className="text-xs text-muted-foreground leading-relaxed">{agent.task}</p>
-                            </div>
+                      {step.helpfulTools.map((tool, toolIndex) => (
+                        <div key={toolIndex} className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-lg bg-accent-green/10 flex items-center justify-center border border-accent-green/20">
+                            <div className="w-3 h-3 rounded bg-accent-green/40"></div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Helpful Tools - Always visible when available */}
-                    {step.helpfulTools.length > 0 && (
-                      <div className="mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.4}s` }}>
-                        <h4 className="text-sm font-semibold text-accent-green mb-3 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
-                          HELPFUL TOOLS
-                        </h4>
-                        <div className="space-y-2">
-                          {step.helpfulTools.map((tool, toolIndex) => (
-                            <div key={toolIndex} className="flex items-start gap-3 animate-scale-in" style={{ animationDelay: `${index * 0.3 + 0.5 + toolIndex * 0.1}s` }}>
-                              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-accent-green/10 flex items-center justify-center mt-0.5 border border-accent-green/20">
-                                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-accent-green/40"></div>
-                              </div>
-                              <div>
-                                <span className="text-xs sm:text-sm font-semibold">{tool.name}</span>
-                                <p className="text-xs text-muted-foreground leading-relaxed">{tool.desc}</p>
-                              </div>
-                            </div>
-                          ))}
+                          <div>
+                            <span className="text-xs font-semibold">{tool.name}</span>
+                            <p className="text-xs text-muted-foreground">{tool.desc}</p>
+                          </div>
                         </div>
-                      </div>
-                    )}
-
-                    {/* Quote */}
-                    <div className="bg-background/50 rounded-lg p-2 sm:p-3 lg:p-4 border-l-4 border-primary/50 animate-fade-in" style={{ animationDelay: `${index * 0.3 + 0.6}s` }}>
-                      <p className="text-xs sm:text-sm text-muted-foreground italic leading-relaxed">"{step.quote}"</p>
+                      ))}
                     </div>
-
-                    {/* Background glow effect */}
-                    <div className={`absolute inset-0 rounded-lg opacity-5 ${step.color.replace('text-', 'bg-')}`}></div>
-                    <div className="absolute -inset-1 rounded-lg opacity-10 bg-gradient-to-r from-primary/10 to-accent/10 blur-sm"></div>
-                  </Card>
-                )}
+                  )}
+                  
+                  <blockquote className="bg-background/50 rounded-lg p-3 border-l-4 border-primary/50">
+                    <p className="text-xs text-muted-foreground italic">"{step.quote}"</p>
+                  </blockquote>
+                </Card>
               </div>
             );
           })}
         </div>
+
+        {/* Moving Rocket - Transparent background */}
+        <div
+          className="fixed left-1/2 transform -translate-x-1/2 transition-all duration-300 z-10"
+          style={{
+            top: `${Math.min(400 + (scrollY * 0.5), window.innerHeight - 200)}px`,
+            transform: `translateX(-50%) ${rocketDirection === 'up' ? 'scaleY(-1)' : 'scaleY(1)'}`,
+          }}
+        >
+          <div className="relative">
+            <img 
+              src={rocketImage} 
+              alt="Rocket" 
+              className="w-12 h-12 sm:w-16 sm:h-16 drop-shadow-2xl animate-float"
+              style={{ filter: 'drop-shadow(0 0 10px rgba(139, 92, 246, 0.3))' }}
+            />
+          </div>
+        </div>
+
+        {/* Spacer for cards */}
+        <div style={{ height: `${journeySteps.length * 250 + 300}px` }}></div>
 
         {/* CTA section */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16 p-4 sm:p-6 lg:p-8 card-gradient rounded-2xl border border-border/50">
